@@ -1,70 +1,64 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
-
-int V,E;
-
-bool isValidEdge(int u, int v, bool inMST[]) {
-    if (u == v) return false;
-    if (inMST[u] == 0 && inMST[v] == 0) return false;
-    else if (inMST[u] == 1 && inMST[v] == 1) return false;
-    return true;
+#define v 5
+int minkey(int visited[],int key[])
+{
+    int min=INT_MAX,min_index;
+    for(int i=0;i<v;i++)
+    {
+        if(visited[i]==0 && key[i]<min)
+        {
+            min=key[i];
+            min_index=i;
+        }
+    }
+    return min_index;
 }
-
-void primsMST(int graph[10][10]) {
-    bool inMST[V+1] = {0};
-    inMST[0] = 1;
-    int edge_count = 0, mincost = 0;
-    while (edge_count < V-1) {
-        int min = INT_MAX, a=-1, b=-1;
-        for (int i=0; i<V; i++) {
-            for (int j=0; j<V; j++) {
-                if (graph[i][j] < min) {
-                        if (isValidEdge(i,j,inMST)) {
-                            min = graph[i][j];
-                            a = i;
-                            b = j;
-                        }
-                }
+void print(int parent[],int graph[v][v])
+{
+    int total=0;
+    cout<<"Edges    weight"<<endl;
+    for(int i=1;i<v;i++)
+    {
+        cout<<parent[i]<<"--"<<i<<"   "<<graph[i][parent[i]]<<endl;
+        total=total+graph[i][parent[i]];
+    }
+    cout<<"Total Weight="<<total;
+}
+void prim(int graph[v][v])
+{
+    int visited[v],key[v],parent[v];
+    for(int i=0;i<v;i++)
+    {
+        visited[i]=0;
+        key[i]=INT_MAX;
+    }
+    key[0]=0;
+    parent[0]=-1;
+    for(int i=0;i<v-1;i++)
+    {
+        int u=minkey(visited,key);
+        visited[u]=1;
+        for(int j=0;j<v;j++)
+        {
+            if(graph[u][j] && graph[u][j]<key[j] && visited[j]==0)
+            {
+                key[j]=graph[u][j];
+                parent[j]=u;
             }
         }
-        if (a != -1 && b != -1) {
-            cout<< "Edge " << edge_count++ << " : ("<<a<<" "<<b<<") "<< "Cost: " << min <<endl;
-            mincost = mincost + min;
-            inMST[b] = inMST[a] = 1;
-        }
     }
-    cout<< "Minimum cost: " << mincost;
+    print(parent,graph);
 }
+int main()
+{
+    
+    int graph[v][v] = { { 0, 2, 0, 6, 0 },
+                        { 2, 0, 3, 8, 5 },
+                        { 0, 3, 0, 0, 7 },
+                        { 6, 8, 0, 0, 9 },
+                        { 0, 5, 7, 9, 0 } };
 
-int main() {
+    prim(graph);
 
-    cout<< "Enter number of nodes and vertices: ";
-    cin>> V >> E;
-    int graph[10][10];
-    for (int i=0; i<=V; i++){
-        for (int j=0; j<=V; j++) {
-            graph[i][j] = INT_MAX;
-        }
-    }
-    cout<< "Enter source, destination, cost respectively: "<<endl;
-    for (int i=0; i<E; i++) {
-        int p,q,cost;
-        cin>> p >> q >> cost;
-        graph[p][q] = graph[q][p] = cost;
-    }
-
-    primsMST(graph);
-
-    return 0;
 }
-
-/*
-5 7
-0 1 2
-1 2 3
-0 3 6
-3 1 8
-1 4 5
-3 4 9
-1 4 5
-*/
