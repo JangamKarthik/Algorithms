@@ -1,81 +1,57 @@
-#include <iostream>
-#include <stack>
-
+#include<iostream>
+#include<stack>
 using namespace std;
 
-const int MAX_NODES = 100005; // maximum number of nodes
+const int MAX=100;
+int v,e;
 
-int n, m; // number of nodes and edges
-int adj[MAX_NODES]; // adjacency list
-int head[MAX_NODES]; // head of the adjacency list
-int nxt[MAX_NODES]; // next of the adjacency list
-int to[MAX_NODES]; // to of the adjacency list
-int vis[MAX_NODES]; // visited array
-int ans[MAX_NODES]; // answer array
-int cnt; // counter for the answer array
-
-// function to add edge to the adjacency list
-void addEdge(int u, int v) {
-    to[cnt] = v;
-    nxt[cnt] = head[u];
-    head[u] = cnt++;
-}
-
-// function to perform DFS
-void dfs(int u, stack<int>& s) {
-    vis[u] = 1; // mark node as visited
-
-    for (int i = head[u]; i != -1; i = nxt[i]) { // loop through all neighbors of the node
-        int v = to[i];
-
-        if (!vis[v]) { // if neighbor is not visited, perform DFS on it
-            dfs(v, s);
-        }
-    }
-
-    s.push(u); // add node to the topological sort stack
-}
-
-// function to perform topological sort
-void topoSort() {
-    stack<int> s; // stack for topological sort
-
-    // perform DFS on all nodes
-    for (int i = 1; i <= n; i++) {
-        if (!vis[i]) {
-            dfs(i, s);
-        }
-    }
-
-    // retrieve the nodes in the topological order
-    while (!s.empty()) {
-        ans[cnt++] = s.top();
+void topological(int arr[MAX][MAX],int vis[],int start){
+    stack <int> s;
+    stack <int> s2;
+    s.push(start);
+    vis[start]=1;
+    while(!s.empty()){
+        int curr=s.top();
+        s2.push(curr);
         s.pop();
+        for(int i=0;i<v;i++){
+            if(arr[curr][i] && vis[i]==0){
+                s.push(i);
+                vis[i]=1;
+            }
+        }
+    }
+    int topo[MAX];
+    int j=0;
+    while(!s2.empty()){
+        topo[j++]=s2.top();
+        s2.pop();
+    }
+
+    cout<<"the topological order is :";
+    for(int i=j-1;i>=0;i--){
+        cout<<" "<<topo[i];
     }
 }
 
-int main() {
-    cin >> n >> m; // read input
-
-    // initialize arrays
-    memset(head, -1, sizeof(head));
-    memset(vis, 0, sizeof(vis));
-
-    // read input and add edges to the adjacency list
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        cin >> u >> v;
-        addEdge(u, v);
+int main(){
+    cout<<"enter the no of vertices :";
+    cin>>v;
+    cout<<"enter the no of edges :";
+    cin>>e;
+    int arr[MAX][MAX] = {0};
+    for(int i=0;i<e;i++){
+        int src,dst;
+        cout<<"enter the source and desitation for the edge :";
+        cin>>src>>dst;
+        arr[src][dst]=1;
     }
+    int vis[v] = {0};
 
-    topoSort(); // perform topological sort
+    int start;
+    cout<<"enter the starting vertex for traversing:";
+    cin>>start;
 
-    // output the nodes in the topological order
-    for (int i = cnt - 1; i >= 0; i--) {
-        cout << ans[i] << " ";
-    }
-
-    cout << endl;
-
+    topological(arr,vis,start);
     return 0;
 }
