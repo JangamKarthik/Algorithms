@@ -1,13 +1,16 @@
 #include<iostream>
 #include<climits>
-
+#include<cstring>
 using namespace std;
 
+const int MAX=100;
+int numVertices,numEdges;
+int adjMatrix[MAX][MAX];
 int miniDist(int distance[], bool Tset[])
 {
     int minimum=INT_MAX,ind;
 
-    for(int k=0;k<6;k++)
+    for(int k=0;k<numVertices;k++)
     {
         if(Tset[k]==false && distance[k]<=minimum)
         {
@@ -18,13 +21,13 @@ int miniDist(int distance[], bool Tset[])
     return ind;
 }
 
-void DijkstraAlgo(int graph[6][6],int src)
+void DijkstraAlgo(int graph[MAX][MAX],int src)
 {
-    int distance[6];
-    bool Tset[6];
+    int distance[numVertices];
+    bool Tset[numVertices];
 
 
-    for(int k = 0; k<6; k++)
+    for(int k = 0; k<numVertices; k++)
     {
         distance[k] = INT_MAX;
         Tset[k] = false;
@@ -32,11 +35,11 @@ void DijkstraAlgo(int graph[6][6],int src)
 
     distance[src] = 0;
 
-    for(int k = 0; k<6; k++)
+    for(int k = 0; k<numVertices; k++)
     {
         int m=miniDist(distance,Tset);
         Tset[m]=true;
-        for(int k = 0; k<6; k++)
+        for(int k = 0; k<numVertices; k++)
         {
 
             if(!Tset[k] && graph[m][k] && distance[m]!=INT_MAX && distance[m]+graph[m][k]<distance[k])
@@ -44,7 +47,7 @@ void DijkstraAlgo(int graph[6][6],int src)
         }
     }
     cout<<"Vertex\t\tDistance from source vertex"<<endl;
-    for(int k = 0; k<6; k++)
+    for(int k = 0; k<numVertices; k++)
     {
         char str=65+k;
         cout<<str<<"\t\t\t"<<distance[k]<<endl;
@@ -52,14 +55,37 @@ void DijkstraAlgo(int graph[6][6],int src)
 }
 
 int main()
-{
-    int graph[6][6]={
-        {0, 1, 2, 0, 0, 0},
-        {1, 0, 0, 5, 1, 0},
-        {2, 0, 0, 2, 3, 0},
-        {0, 5, 2, 0, 2, 2},
-        {0, 1, 3, 2, 0, 1},
-        {0, 0, 0, 2, 1, 0}};
-    DijkstraAlgo(graph,0);
+{       
+        cout<<"enter the no of vertices"<<endl;
+
+    cin >> numVertices;
+
+    cout<<"enter no of edges"<<endl;
+
+    cin>> numEdges;
+
+    memset(adjMatrix, 0, sizeof(adjMatrix));
+
+    for (int i = 0; i < numEdges; i++) {
+
+        int u, v, w;
+
+        cout<<"enter source and destination of the edge"<<endl;
+
+        cin >> u >> v;
+
+        cout<<"enter the weight of this edge :";
+        cin>>w;
+        
+        // Add edge to adjacency matrix
+        adjMatrix[u][v] = w;
+
+    }
+        cout<<"enter a source vertex for traversing :";
+        int src;
+        cin>>src;
+
+    DijkstraAlgo(adjMatrix,src);
+    
     return 0;
 }
