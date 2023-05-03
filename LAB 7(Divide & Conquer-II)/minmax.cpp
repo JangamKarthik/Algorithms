@@ -36,7 +36,7 @@ pair<int,int> minmax(int arr[],int low,int high)
 
 int main(){
     int n;
-    cout<<"kitne elements hai bhai array mei :";
+    cout<<"kenter no of elements in array :";
     cin>>n;
     int arr[n];
 
