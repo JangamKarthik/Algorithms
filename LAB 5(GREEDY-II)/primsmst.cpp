@@ -1,6 +1,6 @@
 #include<iostream>
 using namespace std;
-#define v 5
+int v,e;
 int minkey(int visited[],int key[])
 {
     int min=INT_MAX,min_index;
@@ -52,12 +52,26 @@ void prim(int graph[v][v])
 }
 int main()
 {
+    cout<<"enter the no of vertices: ";
+    cin>>v;
+
+    cout<<"enter the no of edges: ";
+    cin>>e;
+
+    int graph[v][v];
+
+    for(int i=0;i<e;i++){
+        int u,v,w;
+
+        cout<<"enter the source and destination of the edge: ";
+        cin>>u>>v;
+
+        cout<<"enter the weight of the edge: ";
+        cin>>w;
+
+        graph[u][v]=w;
+    }
     
-    int graph[v][v] = { { 0, 2, 0, 6, 0 },
-                        { 2, 0, 3, 8, 5 },
-                        { 0, 3, 0, 0, 7 },
-                        { 6, 8, 0, 0, 9 },
-                        { 0, 5, 7, 9, 0 } };
 
     prim(graph);
 
